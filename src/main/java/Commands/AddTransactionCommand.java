@@ -35,13 +35,13 @@ public class AddTransactionCommand implements ICommand {
             System.out.println("Transaction added: ");
             System.out.println(transaction);
         }catch (Exception e){
-            System.out.println("Something went wrong!");
+            System.out.println("Error adding transaction!" + e.getMessage());
 
         }
     }
     @Override
     public String getName() {
-        return "add";
+        return "Add";
     }
     @Override
     public String getDescription() {

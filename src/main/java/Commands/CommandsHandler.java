@@ -9,8 +9,8 @@ public class CommandsHandler {
     private final Scanner scanner;
     private boolean Running;
 
-    private static final String CMD_HELP = "hjälp";
-    private static final String CMD_EXIT = "avsluta";
+    private static final String CMD_HELP = "help";
+    private static final String CMD_EXIT = "exit";
 
     public CommandsHandler(Scanner scanner) {
         this.scanner = scanner;

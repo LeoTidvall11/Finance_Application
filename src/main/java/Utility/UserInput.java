@@ -40,7 +40,13 @@ public class UserInput {
                 System.out.print(prompt);
                 String input = scanner.nextLine().trim();
                 input = input.replace(',', '.');
-                return Double.parseDouble(input);
+                double value = Double.parseDouble(input);
+
+                if (value <= 0) {
+                    System.out.println("Amount must be positive.");
+                    continue;
+                }
+                return value;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please try again.");
             }

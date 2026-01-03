@@ -5,6 +5,9 @@ build/
 !**/src/test/**/build/
 .kotlin
 
+# Configuration files with credentials
+config.properties
+
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml

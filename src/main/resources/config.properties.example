@@ -1,0 +1,4 @@
+# Copy this file to config.properties and update with your credentials
+db.url=jdbc:postgresql://localhost:5432/finansprojektet
+db.user=your_postgres_username
+db.password=your_postgres_password

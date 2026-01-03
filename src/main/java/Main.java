@@ -1,20 +1,20 @@
 
 import Commands.*;
-import Repositories.CsvTransactionRepository;
 import Repositories.ITransactionRepository;
+import Repositories.PostgresTransactionRepository;
 
 import java.util.Scanner;
 public class Main {
 
-     static void main(String[] args) {
-        final String FILENAME = "transactions.csv";
+     public static void main(String[] args) {
+         Infrastructure.Database.initializeDatabase();
 
 
 
         try (Scanner scanner = new Scanner(System.in)) {
 
 
-            ITransactionRepository repository = new CsvTransactionRepository(FILENAME);
+            ITransactionRepository repository = new Repositories.PostgresTransactionRepository();
 
             CommandsHandler commandsHandler = new CommandsHandler(scanner);
 
