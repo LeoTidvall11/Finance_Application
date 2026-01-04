@@ -12,26 +12,15 @@ public class Main {
 
 
         try (Scanner scanner = new Scanner(System.in)) {
-
-
-            ITransactionRepository repository = new Repositories.PostgresTransactionRepository();
-
+            ITransactionRepository repository = new PostgresTransactionRepository();
             CommandsHandler commandsHandler = new CommandsHandler(scanner);
 
-            ListTransactionsCommand listTransactionsCommand = new ListTransactionsCommand(repository);
-            AddTransactionCommand addTransactionCommand = new AddTransactionCommand(repository, scanner);
-            RemoveTransactionCommand removeTransactionCommand = new RemoveTransactionCommand(repository, scanner);
-            ShowBalanceCommand showBalanceCommand = new ShowBalanceCommand(repository);
-            ListByPeriodCommand listByPeriodCommand = new ListByPeriodCommand(repository, scanner);
-            EditTransactionCommand editTransactionCommand = new EditTransactionCommand(repository, scanner);
-
-
-            commandsHandler.registerCommand(listTransactionsCommand);
-            commandsHandler.registerCommand(addTransactionCommand);
-            commandsHandler.registerCommand(removeTransactionCommand);
-            commandsHandler.registerCommand(showBalanceCommand);
-            commandsHandler.registerCommand(listByPeriodCommand);
-            commandsHandler.registerCommand(editTransactionCommand);
+            commandsHandler.registerCommand(new ListTransactionsCommand(repository));
+            commandsHandler.registerCommand(new AddTransactionCommand(repository, scanner));
+            commandsHandler.registerCommand(new RemoveTransactionCommand(repository, scanner));
+            commandsHandler.registerCommand(new ShowBalanceCommand(repository));
+            commandsHandler.registerCommand(new ListByPeriodCommand(repository, scanner));
+            commandsHandler.registerCommand(new EditTransactionCommand(repository, scanner));
 
             commandsHandler.run();
         }
