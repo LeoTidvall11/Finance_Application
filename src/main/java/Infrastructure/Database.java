@@ -18,18 +18,25 @@ public class Database {
                 .getResourceAsStream("config.properties")) {
 
             if (input == null) {
-                throw new RuntimeException(
-                        "Unable to find config.properties. " +
-                                "Please copy config.properties.example to config.properties " +
-                                "and update with your database credentials."
-                );
+                System.out.println("No config.properties found. Using default settings:");
+                System.out.println("  - Host: localhost:5432");
+                System.out.println("  - Database: finansprojektet");
+                System.out.println("  - User: postgres");
+                System.out.println("To customize, create src/main/resources/config.properties");
+                System.out.println();
+
+                props.setProperty("db.url", "jdbc:postgresql://localhost:5432/finansprojektet");
+                props.setProperty("db.user", "postgres");
+                props.setProperty("db.password", "lösenord");
+
+                return props;
             }
 
             props.load(input);
             return props;
 
         } catch (IOException e) {
-            throw new RuntimeException("Error loading config.properties: " + e.getMessage(), e);
+            throw new RuntimeException("Error loading config" + e.getMessage(), e);
         }
     }
 
@@ -57,11 +64,13 @@ public class Database {
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
             System.out.println("Database initialized successfully.");
+
         } catch (SQLException e) {
             System.out.println("Could not initialize database: " + e.getMessage());
-            System.out.println("1. Please check PostgreSQL is running.");
+            System.out.println("Please check!");
+            System.out.println("1. PostgreSQL is running");
             System.out.println("2. Database 'finansprojektet' exists ");
-            System.out.println("3. Credentials in config.properies ");
+            System.out.println("3. Credentials in config.properties ");
             e.printStackTrace();
             System.exit(1);
         }
