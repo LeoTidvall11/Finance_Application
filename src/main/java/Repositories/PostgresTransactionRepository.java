@@ -5,6 +5,7 @@ import Models.Transaction;
 import Models.TransactionType;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,19 +24,21 @@ public class PostgresTransactionRepository implements ITransactionRepository {
             pstmt.setDouble(3, transaction.getAmount());
             pstmt.setString(4, transaction.getCategory());
             pstmt.setString(5, transaction.getDescription());
-            pstmt.setDate(6, new java.sql.Date(transaction.getDate().getTime()));
+            pstmt.setDate(6, java.sql.Date.valueOf(transaction.getDate()));
+            int rowsAffected = pstmt.executeUpdate();
 
-            pstmt.executeUpdate();
-
+            if  (rowsAffected == 0) {
+                throw new SQLException("Error adding transaction, no rows affected.  " );
+            }
         } catch (SQLException e) {
-            System.out.println("Error adding transaction: " + e.getMessage());
-        }
+            System.out.println("Database error when adding transaction: " + e.getMessage());
+            throw new RuntimeException("Could not add transaction", e);        }
     }
 
     @Override
     public List<Transaction> getAllTransactions() {
         List<Transaction> list = new ArrayList<>();
-        String sql = "SELECT * FROM transactions";
+        String sql = "SELECT * FROM transactions ORDER BY date DESC";
 
         try (Connection conn = Database.getConnection();
              Statement stmt = conn.createStatement();
@@ -47,8 +50,7 @@ public class PostgresTransactionRepository implements ITransactionRepository {
                 double amount = rs.getDouble("amount");
                 String category = rs.getString("category");
                 String description = rs.getString("description");
-                java.util.Date date = new java.util.Date(rs.getDate("date").getTime());
-
+                LocalDate date = rs.getDate("date").toLocalDate();
                 list.add(new Transaction(id, type, amount, category, description, date));
             }
 
@@ -83,7 +85,7 @@ public class PostgresTransactionRepository implements ITransactionRepository {
             pstmt.setDouble(2, transaction.getAmount());
             pstmt.setString(3, transaction.getCategory());
             pstmt.setString(4, transaction.getDescription());
-            pstmt.setDate(5, new java.sql.Date(transaction.getDate().getTime()));
+            pstmt.setDate(5, java.sql.Date.valueOf(transaction.getDate()));
             pstmt.setObject(6, transaction.getId());
 
             pstmt.executeUpdate();

@@ -1,20 +1,20 @@
 package Models;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Transaction {
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     private TransactionType type;
     private double amount;
     private final UUID id;
     private String category;
     private String description;
-    private Date date;
+    private LocalDate date;
 
-    public Transaction(TransactionType type, double amount, String category, String description, Date date) {
+    public Transaction(TransactionType type, double amount, String category, String description, LocalDate date) {
         this.type = type;
 
         this.amount = amount;
@@ -28,7 +28,7 @@ public class Transaction {
         this.date = date;
     }
 
-    public Transaction(UUID id, TransactionType type, double amount, String category, String description, Date date) {
+    public Transaction(UUID id, TransactionType type, double amount, String category, String description, LocalDate date) {
         this.id = id;
 
         this.type = type;
@@ -82,23 +82,17 @@ public class Transaction {
 
 
     public void setCategory(String category) {
-
         this.category = category;
-
     }
 
 
-    public Date getDate() {
-
+    public LocalDate getDate() {
         return date;
-
     }
 
 
-    public void setDate(Date date) {
-
+    public void setDate(LocalDate date) {
         this.date = date;
-
     }
 
 

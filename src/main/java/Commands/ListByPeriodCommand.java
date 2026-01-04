@@ -4,8 +4,7 @@ import Models.Transaction;
 import Repositories.ITransactionRepository;
 import Utility.UserInput;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,38 +21,35 @@ public class ListByPeriodCommand implements ICommand {
     @Override
     public void execute() {
         try {
-            Date startDate = prompt.promptForDate("Enter start-date (YYYY/MM/DD): ");
-            Date endDate = prompt.promptForDate("Enter end-date (YYYY/MM/DD): ");
+            LocalDate startDate = prompt.promptForDate("Enter start date: ");
+            LocalDate endDate = prompt.promptForDate("Enter end date: ");
 
-            if (startDate.after(endDate)) {
-                System.out.println("The end-date can't be before the start-date. Please try again.");
+            if (startDate.isAfter(endDate)) {
+                System.out.println("End date cannot be before start date!");
                 return;
             }
 
             List<Transaction> allTransactions = repository.getAllTransactions();
-            List<Transaction> filteredTransactions = new ArrayList<>();
 
-            for (Transaction transaction : allTransactions) {
-                Date transactionDate = transaction.getDate();
-                if (!transactionDate.before(startDate) && !transactionDate.after(endDate)) {
-                    filteredTransactions.add(transaction);
-                }
-            }
 
-            String startStr = Transaction.dateFormat.format(startDate);
-            String endStr = Transaction.dateFormat.format(endDate);
-            System.out.println("=== Transactions between " + startStr + " - " + endStr + "===");
+            List<Transaction> filtered = allTransactions.stream()
+                    .filter(t -> !t.getDate().isBefore(startDate) && !t.getDate().isAfter(endDate))
+                    .toList();
 
-            if (filteredTransactions.isEmpty()) {
-                System.out.println("No transaction in that date interval.");
+            System.out.println("\n=== Transactions from " + startDate + " to " + endDate + " ===");
+
+            if (filtered.isEmpty()) {
+                System.out.println("No transactions found in this period.");
             } else {
-                for (Transaction transaction : filteredTransactions) {
-                    System.out.println(transaction.toString());
-                    System.out.println("=======================");
-                }
+                System.out.println("Found " + filtered.size() + " transaction(s):\n");
+                filtered.forEach(t -> {
+                    System.out.println(t);
+                    System.out.println("─".repeat(50));
+                });
             }
+
         } catch (Exception e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            System.out.println("Error listing transactions: " + e.getMessage());
         }
     }
 
@@ -64,6 +60,6 @@ public class ListByPeriodCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Every transaction in a specific time interval";
+        return "List transactions in a specific time period";
     }
 }

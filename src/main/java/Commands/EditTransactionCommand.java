@@ -29,49 +29,56 @@ public class EditTransactionCommand implements ICommand {
     }
     @Override
     public void execute() {
-
-        List<Transaction>transactions = repository.getAllTransactions();
-        Transaction transaction = prompt.promptForTransactionSelection(transactions, "Alter ");
-        if (transaction == null) {
-            return;
-        }
-
-        System.out.println("Transaction [" + transaction.getId() + "] chosen. ");
-        boolean editing = true;
-
-        while (editing) {
-            System.out.println(" \n=== Current Transaction ===");
-            System.out.println(transaction);
-            System.out.println("================================");
-
-            System.out.println("What do you want to change? ");
-            System.out.println("1. Type of income (Income or Expense)");
-            System.out.println("2. Amount");
-            System.out.println("3. Category");
-            System.out.println("4. Description");
-            System.out.println("5. Date");
-            System.out.println("6. Save and exit");
+        try {
+            List<Transaction> transactions = repository.getAllTransactions();
+            Transaction transaction = prompt.promptForTransactionSelection(transactions, "Alter ");
 
 
-            String menuChoice = prompt.promptForString("> ");
+            if (transaction == null) {
+                return;
+            }
 
-            if (menuChoice.equals("6")) {
-                editing = false;
-            } else {
-                IEditTransaction action = editActions.get(menuChoice);
+            System.out.println("Transaction [" + transaction.getId() + "] chosen. ");
+            boolean editing = true;
 
-                if (action != null) {
-                    action.execute(transaction, prompt);
+            while (editing) {
+                System.out.println(" \n=== Current Transaction ===");
+                System.out.println(transaction);
+                System.out.println("================================");
+
+                System.out.println("What do you want to change? ");
+                System.out.println("1. Type of income (Income or Expense)");
+                System.out.println("2. Amount");
+                System.out.println("3. Category");
+                System.out.println("4. Description");
+                System.out.println("5. Date");
+                System.out.println("6. Save and exit");
+
+
+                String menuChoice = prompt.promptForString("> ");
+
+                if (menuChoice.equals("6")) {
+                    editing = false;
                 } else {
-                    System.out.println("That is not an option, please try again.");
-                }
+                    IEditTransaction action = editActions.get(menuChoice);
 
+                    if (action != null) {
+                        action.execute(transaction, prompt);
+                    } else {
+                        System.out.println("That is not an option, please try again.");
+                    }
+
+
+                }
 
             }
 
+            repository.updateTransaction(transaction);
+            System.out.println("Transaction has been updated");
         }
-        repository.updateTransaction(transaction);
-        System.out.println("Transaction has been updated");
+        catch (Exception e) {
+            System.out.println("Error editing transaction " + e.getMessage());
+        }
     }
     @Override
     public String getName() {

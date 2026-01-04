@@ -5,7 +5,7 @@ import Models.TransactionType;
 import Repositories.ITransactionRepository;
 import Utility.UserInput;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 
@@ -28,15 +28,19 @@ public class AddTransactionCommand implements ICommand {
 
             String description = prompt.promptForString ("Enter Description:");
 
-            Date date = prompt.promptForDate ("Enter Date (YYYY/MM/DD): ");
-
+            LocalDate date = prompt.promptForDate("Enter Date: ");
             Transaction transaction = new Transaction(type, amount, category, description,date );
             repository.addTransaction(transaction);
-            System.out.println("Transaction added: ");
+            System.out.println("Transaction added! ");
             System.out.println(transaction);
-        }catch (Exception e){
-            System.out.println("Error adding transaction!" + e.getMessage());
 
+        }catch (RuntimeException e) {
+            System.out.println("\n Error adding transaction: " + e.getMessage());
+            System.out.println("Please try again");
+        }
+
+        catch (Exception e) {
+            System.out.println("\n Unexpected error: " + e.getMessage());
         }
     }
     @Override
@@ -45,7 +49,7 @@ public class AddTransactionCommand implements ICommand {
     }
     @Override
     public String getDescription() {
-        return "Adding transaction";
+        return "Adding a new transaction";
     }
 
 

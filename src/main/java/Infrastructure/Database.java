@@ -59,7 +59,11 @@ public class Database {
             System.out.println("Database initialized successfully.");
         } catch (SQLException e) {
             System.out.println("Could not initialize database: " + e.getMessage());
+            System.out.println("1. Please check PostgreSQL is running.");
+            System.out.println("2. Database 'finansprojektet' exists ");
+            System.out.println("3. Credentials in config.properies ");
             e.printStackTrace();
+            System.exit(1);
         }
     }
 }

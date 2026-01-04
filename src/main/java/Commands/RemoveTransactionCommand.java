@@ -18,15 +18,20 @@ public class RemoveTransactionCommand implements ICommand {
 
     @Override
     public void execute() {
-        List<Transaction> transactions = repository.getAllTransactions();
+        try {
+            List<Transaction> transactions = repository.getAllTransactions();
 
-        Transaction transactionToRemove = prompt.promptForTransactionSelection(transactions, "ta bort ");
+            Transaction transactionToRemove = prompt.promptForTransactionSelection(transactions, "ta bort ");
 
-        if (transactionToRemove == null) {
-            return;
+            if (transactionToRemove == null) {
+                return;
+            }
+            repository.removeTransaction(transactionToRemove.getId());
+            System.out.println("Transaction removed!");
         }
-        repository.removeTransaction(transactionToRemove.getId());
-        System.out.println("Transaction removed!");
+        catch (Exception e) {
+            System.out.println("Error removing transaction:  " + e.getMessage() );
+        }
     }
 
     @Override
